@@ -172,11 +172,17 @@
     .time-units { display:flex; justify-content:space-between; margin-top:20px; font-size:10px; letter-spacing:.19em; color:#d7aedf; }
     .time-units span { width:28%; }
     .pulse { animation:pulse 2.3s ease-in-out infinite; color:#e7c4e6; font-size:14px; }
-    #heart { background:#000; overflow:hidden; }
-    #heart .content { width:min(100%,1000px); }
+    #heart { background:#000; overflow:hidden; height:100svh; min-height:100svh; padding:0; }
+    #heart .content { position:absolute; inset:0; width:100%; height:100%; }
     #heart .eyebrow { color:#cf8e85; }
     #heart h1 { font-size:clamp(2.8rem,5vw,4.3rem); color:#ffe7df; }
-    .heart-button { display:block; position:relative; width:min(900px,100%); height:clamp(185px,calc(100svh - 365px),530px); margin:2px auto 4px; padding:0; border:0; background:#000; border-radius:12px; cursor:grab; touch-action:pan-y; user-select:none; }
+    .heart-button { display:block; position:absolute; inset:0; width:100%; height:100%; margin:0; padding:0; border:0; background:#000; border-radius:0; cursor:grab; touch-action:none; user-select:none; }
+    .heart-button:focus-visible { outline:2px solid var(--rose); outline-offset:-6px; }
+    #heart .eyebrow, #heart h1, #heart .heart-prompt, #heart .heart-interaction { position:absolute; left:20px; right:20px; z-index:1; margin:0; pointer-events:none; text-shadow:0 2px 16px #000; }
+    #heart .eyebrow { top:90px; }
+    #heart h1 { top:120px; }
+    #heart .heart-prompt { bottom:100px; }
+    #heart .heart-interaction { bottom:72px; }
     .heart-button.is-dragging { cursor:grabbing; }
     #heart-canvas { width:100%; height:100%; display:block; }
     .heart-prompt { color:#dda69e; }
@@ -459,7 +465,7 @@
       const gather=still?1:smooth((t-settings.starburstSeconds)/settings.gatherSeconds);
       const grown=still?1:smooth((t-settings.starburstSeconds-settings.gatherSeconds)/settings.growSeconds);
       if(grown>.94&&!heartReady){heartReady=true;$('#heart-prompt').textContent=copy('heartPrompt');}
-      const w=heartWidth,h=heartHeight,base=Math.min(w*.30,h*.395),extent=Math.hypot(w,h)*.62;
+      const w=heartWidth,h=heartHeight,base=Math.min(w*.37,h*.34),extent=Math.hypot(w,h)*.62;
       const heartbeat=still?0:Math.pow(Math.max(0,Math.sin(t*3.9)),12)*.028;
       const heartScale=(.105+.895*grown)*(1+heartbeat),amount=heartExplosion?clamp01((now-heartExplosion)/GIFT.timing.heartBurstMs):0;
       const ease=1-Math.exp(-dt*7);
@@ -467,7 +473,7 @@
       heartAim.rotationY+=(heartAim.turnY+heartAim.x*.38+(still?0:Math.sin(t*.38)*settings.autoTurn)-heartAim.rotationY)*ease;
       heartAim.energy+=((heartAim.active?1:0)-heartAim.energy)*ease;
       const rx=heartAim.rotationX,ry=heartAim.rotationY,cx=Math.cos(rx),sx=Math.sin(rx),cy=Math.cos(ry),sy=Math.sin(ry);
-      const centerX=w*.5,centerY=h*.45;
+      const centerX=w*.5,centerY=h*.54;
       // Perspective makes front strands travel farther than back strands.
       function project(x,y,z){
         const xx=x*cy+z*sy,zz=z*cy-x*sy,yy=y*cx-zz*sx,depth=y*sx+zz*cx;
